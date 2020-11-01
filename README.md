@@ -3,6 +3,12 @@ Philips Hue control using the meta driver
 
 Support meta V0.8.15 onwards.
 
+Neeo-like (non-slider):
+https://www.youtube.com/watch?v=Kld_LGcWAuM
+https://www.youtube.com/watch?v=bJgt0cqvB9M
+"slider" usage:
+https://www.youtube.com/watch?v=k3xrKsdhjsI
+
 ## Setup
 ### Step 1 : Install in the meta
 #### Prerequisite
@@ -37,5 +43,6 @@ when loading the recipe, you can suppress all the slides except the ones with sh
 It is pretty much like the neeo HUE except that you have the color picker.
 Also, the slider goes to 0 when you switch the light off ==> This part is a bit buggy as events can be lost. Depending on your case you may prefere going to the slider based driver wich are much more reliable.
 ### slider
-Unlike the non-slider drivers, the slider drivers will switch on and off the lights when you switch the recipe on or off (much more convenient in my view.
+Unlike the non-slider drivers, the slider drivers will switch on and off the lights when you switch the recipe on or off (much more convenient in my view.)
+You also get brightness control through left and right buttons.
 If you want to switch off the light using the driver, just pull the slider toward the left (the first 5% means of). If you go to 6%, the light will be as dim as possible. If you put your dimmer full right, it will be max brightness.
