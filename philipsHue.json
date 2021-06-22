@@ -1,50 +1,40 @@
 { "name":"Hue",
   "manufacturer":"Philips",
   "type":"LIGHT",
-  "version":6,
-  "discovereddevice":{"mac":["00:17:88", "EC:B5:FA"]},
-  "buttons":{
-    "__PREINIT": {"label":"", "type":"static", "command":"", "queryresult":"$.*", "evalwrite":[{"variable":"RegistrationCode","value":"$DiscoveredDeviceIP"}]}
-  },
-  "register":{
-    "registertype": "SECURITY_CODE",
-    "registerheadertext": "Philips Hue Bridge registration",
-    "registerdescription": "Please enter the IP address of your device, then press the button of your bridge and THEN enter.",
-    "registrationcommand":{"type":"http-rest", "command":"{\"verb\":\"post\",\"call\":\"http://$RegistrationCode/api\", \"message\":{\"devicetype\":\"meta\"}}", "queryresult":"$.success.username", "evalwrite":[{"variable":"HueBridgeIp","value":"$RegistrationCode"},{"variable":"HueUserName","value":"$Result"}, {"variable":"IsRegistered","value":"DYNAMIK ((\"$Result\" == \"undefined\") || (\"$Result\".startsWith(\"Command failed:\"))) ? false : true"}]}
-  },
+  "version":20,
   "persistedvariables":{
-    "RegistrationCode":"",
+    "ToInitiate":true,
     "HueBridgeIp":"",
-    "IsRegistered":"",
     "HueUserName":""
   },
   "discover":{
-    "welcomeheadertext":"Hue Driver ==> If first usage, press the button on top of your HUE Bridge before clicking next !!!",
-    "welcomedescription":"powered by meta\nby JAC459",
-    "command":{"type":"http-get", "command":"http://$HueBridgeIp/api/$HueUserName/lights/", "queryresult":["$.*~","$..name"]}
+    "welcomeheadertext":"Hue Driver",
+    "welcomedescription":"Warning ! Press the button on your Hue bridge before pressing next.",
+    "initcommandset":[
+      {"label":"", "type":"static", "command":"$LocalDevices", "queryresult":"$.[?(@property === \"name\" && @.match(/^philips.hue/i))]^", "evalwrite":[{"variable":"HueBridgeIp","value":"DYNAMIK JSON.parse(\"$Result\").ip"}]},
+      {"type":"http-rest", "command":"{\"verb\":\"post\",\"call\":\"http://$HueBridgeIp/api\", \"message\":{\"devicetype\":\"meta\"}}", "queryresult":"$.success.username", "evalwrite":[{"variable":"HueUserName","value":"$Result"},{"variable":"ToInitiate","value":"DYNAMIK \"$HueUserName\" == \"undefined\""}], "evaldo":[{"test":"DYNAMIK !$ToInitiate","then":"__PERSIST", "or":""}]}
+    ],
+    "command": {"type":"http-get", "command":"http://$HueBridgeIp/api/$HueUserName/lights/", "queryresult":["$.*~","$..name"]}
   },
   "template" : {
     "name":"Hue", 
     "dynamicname":"DYNAMIK_INST_START DYNAMIK \"Hue Light \" + JSON.parse(\"$Result\")[1] DYNAMIK_INST_END",
-    "dynamicid":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\")[0] DYNAMIK_INST_END",
-    "manufacturer":"Philips",
-    "version":18,
-    "type":"LIGHT",     
+    "dynamicid":"DYNAMIK_INST_START DYNAMIK \"Light \" + JSON.parse(\"$Result\")[0] DYNAMIK_INST_END",
+    
     "variables":{
       "HueBridgeIp":"$HueBridgeIp",
       "HueUserName":"$HueUserName",  
       "LightNumber":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\")[0] DYNAMIK_INST_END",
-      "DynamicId":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\")[0] DYNAMIK_INST_END",
       "Brightness":"100",
       "SavedBright":"100",
       "Color":"",
       "SwitchedOn":false
     },
     "listeners" : {
-      "HueStatus" : {"type":"http-get", "command":"http://$HueBridgeIp/api/$HueUserName/lights/", "pooltime":"3000", "poolduration":"", "queryresult" : ["$.*~","$.[*].state"], 
+      "HueStatus" : {"type":"http-get", "ishub":true, "command":"http://$HueBridgeIp/api/$HueUserName/lights/", "pooltime":"3000", "poolduration":"", "queryresult" : ["$.*~","$.[*].state"], 
         "evalwrite" : [ 
-          {"variable" : "Brightness", "value" : "DYNAMIK JSON.parse(\"$Result\").find(elt => elt[0] === \"$DynamicId\")[1].on ? Math.round(JSON.parse(\"$Result\").find(elt => elt[0] == \"$DynamicId\")[1].bri/2.54) : 0"},
-          {"variable" : "SwitchedOn", "value" : "DYNAMIK JSON.parse(\"$Result\").find(elt => elt[0] === \"$DynamicId\")[1].on"}
+          {"variable" : "Brightness", "value" : "DYNAMIK JSON.parse(\"$Result\").find(elt => elt[0] === \"$LightNumber\")[1].on ? Math.round(JSON.parse(\"$Result\").find(elt => elt[0] == \"$LightNumber\")[1].bri/2.54) : 0"},
+          {"variable" : "SwitchedOn", "value" : "DYNAMIK JSON.parse(\"$Result\").find(elt => elt[0] === \"$LightNumber\")[1].on"}
    ]
         }
     },
@@ -55,8 +45,8 @@
         "BRIGHTNESS": {"label":"Brightness", "unit" : "Lux", "listen" : "Brightness", "evaldo":[{"test":true, "then":"BRIGHTNESSCHANGE", "or":""}]}
     },
     "buttons":{
-        "POWER ON": {"label":"", "type":"static", "command":"", "evaldo":[{"test":true,"then":"INITIALISE", "or":""}]},
-        "POWER OFF": {"label":"", "type":"static", "command":"", "evaldo":[{"test":true,"then":"CLEANUP", "or":""}]},
+        "POWER ON": {"label":"", "type":"static", "command":"", "evaldo":[{"test":true,"then":"__INITIALISE", "or":""}]},
+        "POWER OFF": {"label":"", "type":"static", "command":"", "evaldo":[{"test":true,"then":"__CLEANUP", "or":""}]},
         "SWITCHON": {"label":"", "type":"http-rest", "command":"{\"verb\":\"put\",\"call\":\"http://$HueBridgeIp/api/$HueUserName/lights/$LightNumber/state\", \"message\":{\"on\": true}}", "evalwrite":[{"variable":"SwitchedOn","value":true}, {"variable":"Brightness","value":"DYNAMIK Math.round($SavedBright)"}]},
         "SWITCHOFF": {"label":"", "type":"http-rest", "command":"{\"verb\":\"put\",\"call\":\"http://$HueBridgeIp/api/$HueUserName/lights/$LightNumber/state\", \"message\":{\"on\": false}}", "evalwrite":[{"variable":"SwitchedOn","value":false}, {"variable":"SavedBright","value":"DYNAMIK Math.round($Brightness)"}, {"variable":"Brightness","value":0}]},
         "BRIGHTNESSCHANGE": {"label":"", "type":"http-rest", "command":"DYNAMIK \"{\\\"verb\\\":\\\"put\\\",\\\"call\\\":\\\"http://$HueBridgeIp/api/$HueUserName/lights/$LightNumber/state\\\", \\\"message\\\":{\\\"bri\\\": \" + Math.round(254/100*$Brightness) + \"}}\""}
