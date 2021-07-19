@@ -11,8 +11,8 @@
     "welcomeheadertext":"Hue Driver",
     "welcomedescription":"Warning ! Press the button on your Hue bridge before pressing next.",
     "initcommandset":[
-      {"label":"", "type":"mDNS", "command":"", "queryresult":"$.[?(@property === \"name\" && @.match(/^philips.hue/i))]^", "evalwrite":[{"variable":"HueBridgeIp","value":"DYNAMIK JSON.parse(\"$Result\").ip"}]},
-      {"type":"http-rest", "command":"{\"verb\":\"post\",\"call\":\"http://$HueBridgeIp/api\", \"message\":{\"devicetype\":\"meta\"}}", "queryresult":"$.success.username", "evalwrite":[{"variable":"HueUserName","value":"$Result"},{"variable":"ToInitiate","value":"DYNAMIK \"$HueUserName\" == \"undefined\""}], "evaldo":[{"test":"DYNAMIK !$ToInitiate","then":"__PERSIST", "or":""}]}
+      {"label":"", "type":"mDNS", "command":"", "queryresult":"$.[?(@property === \"name\" && @.match(/^_hue/i))]^", "evalwrite":[{"variable":"HueBridgeIp","value":"DYNAMIK JSON.parse(\"$Result\").ip"}]},
+      {"type":"http-rest", "command":"{\"verb\":\"post\",\"call\":\"http://$HueBridgeIp/api\", \"message\":{\"devicetype\":\"meta\"}}", "queryresult":"$..success.username", "evalwrite":[{"variable":"HueUserName","value":"$Result"},{"variable":"ToInitiate","value":"DYNAMIK \"$HueUserName\" == \"undefined\""}], "evaldo":[{"test":"DYNAMIK !$ToInitiate","then":"__PERSIST", "or":""}]}
     ],
     "command": {"type":"http-get", "command":"http://$HueBridgeIp/api/$HueUserName/lights/", "queryresult":["$.*~","$..name"]}
   },
