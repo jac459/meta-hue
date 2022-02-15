@@ -90,7 +90,7 @@ If you don't have a Hue entry, you should add to the file an entry like that:
         "mac": "0",
         "short": "_hue._tcp.local",
         "port": 443
-    },
+    }
 ```
 
 What is important here is to keep the name as it is and replace the IP by your own bridge IP.
