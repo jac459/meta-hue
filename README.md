@@ -51,7 +51,7 @@ If you don't have a standard install of the meta (on a RPI) or a complex network
 In this case, you will need to go in your meta folder and look for a file named (exactly with the right casing) resultsDiscovery.json.
 If the file exists, update it. If the file doesn't exist, create it and update it.
 
-This file is written in JSON format and should look like that:
+This file is written in JSON format and should look like that (not listing particularly only your hue but all your devices (in this example you can see google home devices)):
 
 ```
 [
@@ -83,13 +83,15 @@ This file is written in JSON format and should look like that:
 Each entries in this list correspond to one of your devices. 
 
 If you don't have a Hue entry, you should add to the file an entry like that:
-   {
+```
+    {
         "name": "Philips Hue - 74250E._hue._tcp.local",
         "ip": "192.168.50.242",
         "mac": "0",
         "short": "_hue._tcp.local",
         "port": 443
     },
+```
 
 What is important here is to keep the name as it is and replace the IP by your own bridge IP.
 
