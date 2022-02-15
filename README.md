@@ -35,4 +35,73 @@ when loading the recipe, you can suppress all the slides except the ones with sh
 
 ## Usage
 It is pretty much like the neeo HUE except that you have the color picker.
-Also, the slider goes to 0 when you switch the light off ==> This part is a bit buggy as events can be lost ny neeo (nothing I can do). Depending on your case you may prefere going to the slider based driver wich are much more reliable.
+Also, the slider goes to 0 when you switch the light off ==> This part is a bit buggy as events can be lost ny neeo (nothing I can do). Depending on your case you may prefere going to the slider based driver wich are much more reliable.'
+
+## Troubleshooting
+
+### I wrongly pressed the next button 
+If you didn't follow the right process, you may need to restart from scratch the process.
+To do that, you may have to delete the -DataStore.json file created when you did the setup.
+You can delete it through the meta-core driver directly through the interface if you use a RPI.
+If you don't, you need to go in the meta folder and then the /active folder and look for the -datastore related to your driver.
+Suppress it. Restart the meta. Restart the setup process.
+
+### I can't find any HUE Bridge.
+If you don't have a standard install of the meta (on a RPI) or a complex network with a mDNS blocker, you may not be able to discover the HUE automatically.
+In this case, you will need to go in your meta folder and look for a file named (exactly with the right casing) resultsDiscovery.json.
+If the file exists, update it. If the file doesn't exist, create it and update it.
+
+This file is written in JSON format and should look like that:
+
+```
+[
+    {
+        "name": "googlerpc-1._googlerpc._tcp.local",
+        "ip": "192.168.30.148",
+        "mac": "48:b0:2d:3d:3a:23",
+        "short": "_googlerpc._tcp.local",
+        "port": 8012
+    },
+    {
+        "ip": "192.168.30.148",
+        "mac": "48:b0:2d:3d:3a:23",
+        "port": 10001
+    },
+    {
+        "name": "googlerpc._googlerpc._tcp.local",
+        "ip": "192.168.30.178",
+        "mac": "94:be:44:a9:c3:5e",
+        "short": "_googlerpc._tcp.local",
+        "port": 8012
+    },
+    
+   .......
+  
+]
+```
+
+Each entries in this list correspond to one of your devices. 
+
+If you don't have a Hue entry, you should add to the file an entry like that:
+   {
+        "name": "Philips Hue - 74250E._hue._tcp.local",
+        "ip": "192.168.50.242",
+        "mac": "0",
+        "short": "_hue._tcp.local",
+        "port": 443
+    },
+
+What is important here is to keep the name as it is and replace the IP by your own bridge IP.
+
+BE CAREFUL:
+In Json, the last item in a list shouldn't have a comma after it. BUT if you have a list each other items than the last one should have a comma at the end.
+
+
+
+
+
+
+
+
+
+
