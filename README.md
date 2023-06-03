@@ -1,7 +1,7 @@
 # meta-hue
 Philips Hue control using the meta driver
 
-Support the new need jac4599/meta.
+Support the new need jac459/meta.
 
 https://www.youtube.com/watch?v=Kld_LGcWAuM
 
