@@ -18,7 +18,7 @@ To install, downnoad the file you want and move it to the "activated" folder.
 philipsHue.json ==> control your bulbs.
 philipsHueGroup.json ==> control your grous (room and zones).
 
-Restart the metadriver :
+Restart the meta :
 
 ### Step 2 : Install in the neeo app
 In the neeo app, add a device and search for Meta or Hue until you find the drivers.
@@ -34,6 +34,14 @@ if you put all the device under one device, you need to call all power on and of
 when loading the recipe, you can suppress all the slides except the ones with shortcuts. 
 
 ## Usage
+
+### Philips Hue Slider and Philips Hue Slider Group: 
+The switch+slider widget has been replaced by a slider which is doing everything (when in the 10% left, the light is off, at from 11% to 100% of the slider is the minimum light to maximum intensity).
+A color picker is available as well as a status color picture showing the color chosen.
+The power off button of the remote is working as expected.
+If you have a lot of Hue, this version is the best option.
+
+### Philips Hue and Philips Hue Group (Not recommanded as using some unreliable neeo features): 
 It is pretty much like the neeo HUE except that you have the color picker.
 Also, the slider goes to 0 when you switch the light off ==> This part is a bit buggy as events can be lost ny neeo (nothing I can do). Depending on your case you may prefere going to the slider based driver wich are much more reliable.'
 
