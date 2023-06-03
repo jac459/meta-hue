@@ -1,12 +1,9 @@
 # meta-hue
 Philips Hue control using the meta driver
 
-Support the new need jac459/meta.
+Support the new neeo jac459/meta.
 
-https://www.youtube.com/watch?v=Kld_LGcWAuM
-
-https://www.youtube.com/watch?v=bJgt0cqvB9M
-
+https://youtu.be/MEQMbPSaNuc
 
 ## Setup
 ### Step 1 : Install in the meta
